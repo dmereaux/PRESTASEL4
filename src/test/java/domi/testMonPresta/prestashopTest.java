@@ -50,20 +50,24 @@ import java.net.URL;
 import java.time.Duration;
 
 public class prestashopTest {
+	private static String baseUrl;
 	private WebDriver driver;  
 	private boolean acceptNextAlert = true;
 	private StringBuffer verificationErrors = new StringBuffer();
 	private HashMap<String, Object> vars;
 	//  private Util monUtil;
 	final static Logger logger = Logger.getLogger(domi.testMonPresta.prestashopTest.class);
-	private String PrestaShopURL="http://www.qualifiez.fr/monPrestashop2/prestashop/index.php?";
+
 
 
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		driver = new ChromeDriver(); 
-		driver.get(PrestaShopURL);
+		driver = new ChromeDriver(new ChromeOptions().addArguments("--disable-search-engine-choice-screen"));
+		baseUrl = "http://www.qualifiez.fr/monPrestashop2/prestashop/index.php";
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
+		driver.get(baseUrl);
 
         // commandes pour lancer un profile firefox spécifique
 //		FirefoxOptions options = new FirefoxOptions();
@@ -88,17 +92,27 @@ public class prestashopTest {
 		}
 		return whNow.iterator().next();
 	}
+	
+	// faire le test de recherche de MUG
+	@Test 
+	public void chercherLeMug() throws InterruptedException, MalformedURLException {
+	}
+	
 
+	// paramètriser le test de recherche de MUG
 	@ParameterizedTest
 	@CsvFileSource(resources = "donnees.csv", numLinesToSkip = 1)
 	public void testPrestashopParam(String input, String expected) throws Exception {
 	} 
 	// Utilisation des fonctions de base + attente explicite
+	
+	// avant de saisir le texte attendre que le champ soit visible
 	@Test 
-	public void chercherLeMugAttenteCliquable() throws InterruptedException, MalformedURLException {
+	public void chercherLeMugAttenteChampVisaible() throws InterruptedException, MalformedURLException {
 	}
 
 
+	// lancer le test en mode headless
 	@Test 
 	public void chercherLeMugHeadless() throws InterruptedException, MalformedURLException {
 		driver.quit();
@@ -154,24 +168,11 @@ public class prestashopTest {
 	public void compterLesFenetres() {
 
 		driver.get("http://www.qualifiez.fr/examples/Selenium/project-list.php");
-		driver.findElement(By.id("btnNewWindow")).click();
-		assertEquals ("Projets",driver.getTitle());
-		Set<String> set = driver.getWindowHandles();
-		assertEquals(2,set.size());
-		driver.switchTo().window("toto");
-		assertEquals ("My Window",driver.getTitle());
-		System.out.print("Handle: " + driver.getWindowHandle());
-
 
 	}
 	// Utiliser la classe action
 	@Test
 	public void testActions() throws Exception {
-		driver.manage().window().maximize();
-		Actions builder = new Actions(driver);
-		Action mouseOverClothes = builder.moveToElement(driver.findElement(By.cssSelector("#category-3 > a"))).build();
-		mouseOverClothes.perform();
-		assertTrue(driver.findElement(By.xpath("//*[@id='category-4']/a")).isDisplayed());
 
 	} 
 
@@ -180,32 +181,11 @@ public class prestashopTest {
 	// Traitement des alertes
 	public void testPrestashopALerte() throws Exception {
 		driver.get("https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_alert");
-		driver.findElement(By.id("accept-choices")).click();
-		driver.switchTo().frame("iframeResult");
-		driver.findElement(By.xpath("//*[@onclick='myFunction()']")).click();
-     
-		Wait<WebDriver> MonAttente = new WebDriverWait(driver, Duration.ofSeconds(2));
-        MonAttente.until(ExpectedConditions.alertIsPresent());
-		Alert alert = driver.switchTo().alert();
-		assertEquals("Hello! I am an alert box!", alert.getText());
-		alert.accept();
 
 	}
 	@Test
 	// Traitement des alertes
 	public void testPrestashopALerteAccepteA() throws Exception {
-		driver.quit();
-		ChromeOptions option = new ChromeOptions();
-		option.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
-		driver= new ChromeDriver(option);
-		driver.get("https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_alert");
-		driver.findElement(By.id("accept-choices")).click();
-		driver.switchTo().frame("iframeResult");
-		driver.findElement(By.xpath("//*[@onclick='myFunction()']")).click();
-		Thread.sleep(2);
-		// on peut cliquer sans fermer l'alerte
-		driver.findElement(By.xpath("//*[@onclick='myFunction()']")).click();
-		driver.quit();
 
 	}
 

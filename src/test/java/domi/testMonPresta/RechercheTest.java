@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -40,10 +41,8 @@ public class RechercheTest {
 	public void setUp() throws Exception {
 
 		// creation du driver
-		System.setProperty("webdriver.chrome.driver", "/Users/dominiquemereaux/code/driver/chromedriver");
-		driver = new ChromeDriver();
+		driver = new ChromeDriver(new ChromeOptions().addArguments("--disable-search-engine-choice-screen"));
 		baseUrl = "http://www.qualifiez.fr/monPrestashop2/prestashop/index.php";
-
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
 		driver.get(baseUrl);
@@ -52,25 +51,17 @@ public class RechercheTest {
 
 	};
 
-	// Create a test using SignInPage and PageProject to check successful login  
+	// faire une recherche sur des MUGs
 	@Test
 	public void testRecherche() throws Exception {
-		
-		pageRecherche res = accueil.rechercher("MUG");
-		res.trier("Prix, croissant");		
-		assertEquals("Il y a 5 produits.",res.nbElementTrouve());
-		assertTrue(res.verifierTri());
 	}
+	// faire une recherche qui n'aboutit pas 
 	@Test
 	public void testRechercheInfructueuse() throws Exception {
-		pageRecherche res = accueil.rechercher("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-		assertEquals("Aucun produit ne correspond à votre recherche",res.PasDeResultat());
-		assertEquals("xxxxxxxxxxxxxxxxxxxxxxxxxxxx",res.valeurRecherchee());
 	}
+	// faire une recherche vide
 	@Test
 	public void testRechercheInfructueuseVide() throws Exception {
-		pageRecherche res = accueil.rechercher("");
-		assertEquals("Aucun produit ne correspond à votre recherche",res.PasDeResultat());
 	}
 	@AfterEach
 	public  void tearDown() throws Exception {
