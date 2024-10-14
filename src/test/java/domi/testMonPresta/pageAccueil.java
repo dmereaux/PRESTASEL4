@@ -24,7 +24,9 @@ public class pageAccueil {
 //	@Step("Rechercher les MUG")
 	public pageRecherche rechercher(String mot)
 	{
-		   return PageFactory.initElements(driverAccueil, pageRecherche.class);
+		  champRecherche.sendKeys(mot);
+		  champRecherche.sendKeys(Keys.ENTER);
+		  return PageFactory.initElements(driverAccueil, pageRecherche.class);
 	}
 
 

@@ -4,6 +4,8 @@ package domi.testMonPresta;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.io.StringReader;
 import java.time.Duration;
@@ -52,12 +54,22 @@ public class RechercheTest {
 	};
 
 	// faire une recherche sur des MUGs
-	@Test
-	public void testRecherche() throws Exception {
+//	@Test
+	@ParameterizedTest
+	@CsvFileSource(resources = "./donnees.csv", numLinesToSkip = 1)
+	public void testRecherche(String input,String expected) throws Exception {
+//		public void testRecherche() throws Exception {
+		pageRecherche pageR = accueil.rechercher("MUG");
+		assertEquals("Il y a 5 produits.",pageR.nbElementTrouve());
+		
+		
 	}
 	// faire une recherche qui n'aboutit pas 
 	@Test
 	public void testRechercheInfructueuse() throws Exception {
+		pageRecherche pageR = accueil.rechercher("xxxxxxxxx");
+		assertEquals(pageR.PasDeResultat(),"");
+
 	}
 	// faire une recherche vide
 	@Test
